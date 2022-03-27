@@ -35,7 +35,7 @@ def remaining_options(words, guess_history):
     return words
     
     
-def IG_Calc(word):
+def IG_Calc(words):
 
     """
     Calculates the information obtained from each word by finding out the number of times a letter has appeared in the corpus at each position.
@@ -44,12 +44,32 @@ def IG_Calc(word):
     
     IG[26][5] = np.zeros((26,5))
     
-    Total_characters = len(word)*5
+    Total_characters = len(words)*5
     
-    for w in word:
-        for index,ele in enumerate(w):
+    for word in words:
+        for index,ele in enumerate(word):
             IG[ord(ele)][index] += 1
     
     IG = np.divide(IG,Total_characters)
     
     return IG
+    
+def Calc_Word_IG(words, IG):
+
+    """
+    
+    """
+    word_IG_dict = {}
+    occured_letter = ""
+    for word in words:
+    
+        occured_letter = ""
+        sum_IG = 0
+        
+        for index,ele in enumerate(word):
+            if ele not in occured_letter:
+                sum_IG += IG[ord(ele)][index]
+        
+        word_IG_dict[sum_IG] = word
+    
+    return word_IG_dict
