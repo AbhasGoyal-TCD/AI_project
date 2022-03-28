@@ -1,5 +1,6 @@
 import numpy as np
 from WordleAI import LetterInformation
+from functools import lru_cache
 
 #Constraint based filtering on returned guesses.
 #Credits: OutcomeBasedAI.py To be referenced
@@ -13,6 +14,7 @@ def remaining_options(words, guess_history):
     correct = set()
     present_letters = set()
     for entry in guess_history:
+        print(entry[0])
         for i in range(5):
             if entry[1][i] == LetterInformation.CORRECT:
                 correct.add((entry[0][i], i))
@@ -73,3 +75,18 @@ def Calc_Word_IG(words, IG):
         word_IG_dict[sum_IG] = word
     
     return word_IG_dict
+
+@lru_cache(maxsize=None)
+def calc_response_vector(w1,w2):
+    tw2 = w2
+    msum = [0 for i in range(5)]
+    for c_ind in range(5):
+        if w1[c_ind] == tw2[c_ind]:
+            msum[c_ind] = 2
+            tw2 = tw2[:c_ind] + "*" + tw2[c_ind+1:]
+    for c_ind in range(5):
+        if w1[c_ind] in tw2 and msum[c_ind] == 0:
+            msum[c_ind] = 1
+            ind_app = tw2.find(w1[c_ind])
+            tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
+    return msum

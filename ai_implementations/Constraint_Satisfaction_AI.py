@@ -13,7 +13,6 @@ class Simple_CSP(WordleAI):
         
     
     def guess(self, guess_history):
-    
         if len(guess_history) == 0:
             
             res_word = list(self.word_IG_dict.keys())
