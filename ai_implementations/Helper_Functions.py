@@ -3,7 +3,6 @@ from WordleAI import LetterInformation
 from functools import lru_cache
 
 #Constraint based filtering on returned guesses.
-#Credits: OutcomeBasedAI.py To be referenced
 def remaining_options(words, guess_history):
     """
     Filters a word list with all the known information.
