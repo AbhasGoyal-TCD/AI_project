@@ -78,16 +78,15 @@ def Calc_Word_IG(words, IG):
     return word_IG_dict
 
 @lru_cache(maxsize=None)
-def calc_response_vector(w1,w2):
-    tw2 = w2
-    msum = [0 for i in range(5)]
-    for c_ind in range(5):
-        if w1[c_ind] == tw2[c_ind]:
-            msum[c_ind] = 2
-            tw2 = tw2[:c_ind] + "*" + tw2[c_ind+1:]
-    for c_ind in range(5):
-        if w1[c_ind] in tw2 and msum[c_ind] == 0:
-            msum[c_ind] = 1
-            ind_app = tw2.find(w1[c_ind])
-            tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
-    return msum
+def calculate_responce(word1,word2):
+    r = [0,1,2,3,4]
+    vector = []
+    for i in r:
+        if word1[i] == word2[i]:
+            vector.append(2)
+        else :
+           vector.append(0) 
+    for i in r:
+        if word1[i] in word2 and vector[i] == 0:
+            vector[i] = 1
+    return vector
