@@ -22,27 +22,27 @@ class Greedy_min_max(WordleAI):
             self.last_word = (guess_history[length-1])[0]
             #check based on responce given if the last word can be obtained
             responce =[]
-            en = guess_history[length-1]
-            word1 = en[0]
-            matrix = {}
-            responce =[]
-            r = [0,1,2,3,4]
-            for i in r:
-                if en[1][i] == LetterInformation.CORRECT:
-                    responce.append(2)
-                elif en[1][i] == LetterInformation.PRESENT:
-                    responce.append(1)
-                else:
-                    responce.append(0)
-            for word2 in next_p_words:
-                word2 = word2.strip()
-                vector = calculate_responce(word1,word2)
-                if tuple(vector) not in matrix:
-                    matrix[tuple(vector)] = [word2]
-                else:
-                    matrix[tuple(vector)].append(word2)
-            next_p_words = matrix[tuple(responce)]
-                
+            for en in guess_history:
+                word1 = en[0]
+                matrix = {}
+                responce =[]
+                r = [0,1,2,3,4]
+                for i in r:
+                    if en[1][i] == LetterInformation.CORRECT:
+                        responce.append(2)
+                    elif en[1][i] == LetterInformation.PRESENT:
+                        responce.append(1)
+                    else:
+                        responce.append(0)
+                for word2 in next_p_words:
+                    word2 = word2.strip()
+                    vector = calculate_responce(word1,word2)
+                    if tuple(vector) not in matrix:
+                        matrix[tuple(vector)] = [word2]
+                    else:
+                        matrix[tuple(vector)].append(word2)
+                next_p_words = matrix[tuple(responce)]
+                    
             #fetch the possible next words metrix
             if len(next_p_words) == 1:
                 return next_p_words[0]
