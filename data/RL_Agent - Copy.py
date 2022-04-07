@@ -9,7 +9,7 @@ from WordleJudge import WordleJudge
 
 class RL_Agent(WordleAI):
 
-    def __init__(self, words, alpha=0.3,gamma=0.1,epsilon=0.9, mode = 'Competing'):
+    def __init__(self, words, alpha=0.1,gamma=0.5,epsilon=0.3, mode = 'Competing'):
         super().__init__(words)
         self.IG = IG_Calc(self.words)
         #self.word_IG_dict = Calc_Word_IG(self.words,self.IG)
@@ -47,26 +47,20 @@ class RL_Agent(WordleAI):
         action = self.qlearner.get_action(self.cur_state, legal_actions)
         self.prev_action = action
 
-        if action == 0 or action == 1:
+        if action == 0:
             word_list = rem_words
-        elif action == 2 or action == 3:
+        elif action == 1:
             word_list = undiscovered_words 
         else:
             word = random.choice(self.words)
             return word
         
-        if action == 0 or action == 2:
-            self.IG = IG_Calc(word_list)
-            word_dict = Calc_Word_IG(word_list,self.IG)
-            res_word = list(word_dict.keys())
-            res_word.sort(reverse=True)
+        self.IG = IG_Calc(word_list)
+        word_IG_dict = Calc_Word_IG(word_list,self.IG)
+        res_word = list(word_IG_dict.keys())
+        res_word.sort(reverse=True)
         
-        if action == 1 or action == 3:
-            word_dict = Wordle_prob(word_list,self.judge)
-            res_word = list(word_dict.keys())
-            res_word.sort(reverse=True)
-            
-        return word_dict[res_word[0]]
+        return word_IG_dict[res_word[0]]
     
     #Combine feedbacks to obtain current state
     def form_state(self, cur_state, guess_history):
@@ -112,7 +106,7 @@ class QLearner():
         self.gamma=gamma
         self.epsilon = epsilon
         self.action = ''
-        self.action_count = 5
+        self.action_count = 3
         self.qtable = {}
         
         if mode == 'Competing':
@@ -128,7 +122,7 @@ class QLearner():
         if new_state in self.qtable.keys():
             a_prime = np.argmax(self.qtable[new_state])
         else:
-            self.qtable[new_state]=[0,0,0,0,0]
+            self.qtable[new_state]=[0,0,0]
             a_prime = random.randint(0,self.action_count-1)
         
         self.reward = self.get_reward(action,state, new_state,guess_history)
@@ -147,7 +141,7 @@ class QLearner():
                     max_val = self.qtable[state][ele]
                     new_action = ele
         else:
-            self.qtable[state]=[0,0,0,0,0]
+            self.qtable[state]=[0,0,0]
             new_action = random.choice(actions)
         
         if self.epsilon > random.random():
@@ -161,7 +155,7 @@ class QLearner():
     def get_reward(self,action,state,next_state, guess_history):
         r = 0
         entry = guess_history[1]
-        if action == 2 or action == 3:
+        if action == 1:
             for i in range(5):
                 if entry[i] == LetterInformation.CORRECT:
                         r = r+20

@@ -2,7 +2,7 @@ from WordList import WordList
 from WordleAI import LetterInformation
 from ai_implementations.LetterPopularityAI import LetterPopularityAI
 from ai_implementations.Constraint_Satisfaction_AI import Simple_CSP
-
+from ai_implementations.RL_Agent import RL_Agent
 """
 Executing this file allows playing the game in the browser with AI support. Simply relay the ingame information 
 to the AI via console input. 
@@ -30,7 +30,7 @@ def to_enum(char):
         return 2
     return 3
 
-ai = Simple_CSP(WordList("data/official/combined_wordlist.txt").get_list_copy())
+ai = RL_Agent(WordList("data/official/combined_wordlist.txt").get_list_copy())
 guesses = [] # pass already done guesses in this list. It will overwrite the first AI guesses. You still have to relay the responses through console input
 
 attempts = 0

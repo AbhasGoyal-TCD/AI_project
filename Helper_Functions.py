@@ -1,6 +1,7 @@
 import numpy as np
 from WordleAI import LetterInformation
 from functools import lru_cache
+from WordleJudge import WordleJudge
 
 #Constraint based filtering on returned guesses.
 #Credits: OutcomeBasedAI.py To be referenced
@@ -109,3 +110,11 @@ def calc_response_vector(w1,w2):
             ind_app = tw2.find(w1[c_ind])
             tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
     return msum
+
+def Wordle_prob(words, judge):
+    word_IG_dict = {}
+
+    for word in words:
+        word_IG_dict[judge.is_wordle_probability(word)] = word
+        
+    return word_IG_dict
