@@ -118,3 +118,18 @@ def Wordle_prob(words, judge):
         word_IG_dict[judge.is_wordle_probability(word)] = word
         
     return word_IG_dict
+    
+    
+@lru_cache(maxsize=None)
+def calculate_response(word1,word2):
+    r = [0,1,2,3,4]
+    vector = []
+    for i in r:
+        if word1[i] == word2[i]:
+            vector.append(2)
+        else :
+           vector.append(0) 
+    for i in r:
+        if word1[i] in word2 and vector[i] == 0:
+            vector[i] = 1
+    return vector
