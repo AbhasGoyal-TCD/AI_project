@@ -95,7 +95,7 @@ class RL_Agent(WordleAI):
             actions.append(1)
             
         if not bool(CSP_list) and not bool(Undis_list):
-            actions.append(5)
+            actions.append(4)
 
         return actions
     

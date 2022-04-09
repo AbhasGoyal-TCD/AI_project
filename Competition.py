@@ -3,6 +3,7 @@ import os
 import random
 import importlib
 import time
+import json
 
 import pytablewriter
 import numpy as np
@@ -10,7 +11,7 @@ from pytablewriter.style import Style
 
 from WordList import *
 from WordleAI import *
-from ai_implementations import LetterPopularityAI
+#from ai_implementations import LetterPopularityAI
 
 
 class Competition:
@@ -74,12 +75,19 @@ class Competition:
         guesses = {}
         points = {}
         round_words = []
+        round_times = {}
+        round_success = {}
+        round_guess = {}
 
         for competitor in self.competitors:
             result[competitor] = 0
             success_total[competitor] = 0
             guesses[competitor] = []
             points[competitor] = []
+            round_times[competitor.__class__.__name__] = []
+            round_success[competitor.__class__.__name__] = []
+            round_guess[competitor.__class__.__name__] = []
+            
         fight_words = WordList(solution_wordlist_filename).get_list_copy()
         start = time.time()
         competitor_times = np.zeros(len(self.competitors))
@@ -99,7 +107,13 @@ class Competition:
                 points[competitor].append(round_points)
                 if success:
                     success_total[competitor] += 1
-                competitor_times[c] += time.time() - competitor_start
+                competitior_end = time.time()
+                
+                competitor_times[c] += competitior_end - competitor_start
+                round_times[competitor.__class__.__name__].append(competitior_end - competitor_start)
+                round_success[competitor.__class__.__name__].append(success)
+                round_guess[competitor.__class__.__name__].append(len(round_guesses))
+                
                 c += 1
 
         print("\n")
@@ -130,8 +144,16 @@ class Competition:
                  str(100 * success_total[competitor] / rounds) + "%"])
             placement += 1
         writer.write_table()
-
-
+        
+        with open("Results.txt",'w') as f:
+            f.write(json.dumps(round_words))
+            f.write("\n")
+            f.write(json.dumps(round_times))
+            f.write("\n")
+            f.write(json.dumps(round_success))
+            f.write("\n")
+            f.write(json.dumps(round_guess))
+            
 def is_hard_mode(word, guess_history):
     """
     Returns True if the word is a legal guess in hard mode.
@@ -144,7 +166,7 @@ def main():
     np.set_printoptions(suppress=True)
 
     competition = Competition("ai_implementations", wordlist_filename="data/official/combined_wordlist.txt", hard_mode=False)
-    competition.fight(rounds=100, solution_wordlist_filename="data/official/combined_wordlist.txt", print_details=False, shuffle = True)
+    competition.fight(rounds=10, solution_wordlist_filename="data/official/combined_wordlist.txt", print_details=False, shuffle = True)
 
 if __name__ == "__main__":
     main()

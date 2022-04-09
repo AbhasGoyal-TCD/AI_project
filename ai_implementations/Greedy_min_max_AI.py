@@ -36,7 +36,7 @@ class Greedy_min_max(WordleAI):
                         responce.append(0)
                 for word2 in next_p_words:
                     word2 = word2.strip()
-                    vector = calculate_responce(word1,word2)
+                    vector = calculate_response(word1,word2)
                     if tuple(vector) not in matrix:
                         matrix[tuple(vector)] = [word2]
                     else:
@@ -54,7 +54,7 @@ class Greedy_min_max(WordleAI):
             matrix = {}
             for word2 in next_p_words:
                 word2 = word2.strip()
-                vector = calculate_responce(word1,word2)
+                vector = calculate_response(word1,word2)
                 if tuple(vector) not in matrix:
                     matrix[tuple(vector)] = [word2]
                 else:

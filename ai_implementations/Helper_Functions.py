@@ -78,7 +78,7 @@ def Calc_Word_IG(words, IG):
     return word_IG_dict
 
 @lru_cache(maxsize=None)
-def calculate_responce(word1,word2):
+def calculate_response(word1,word2):
     r = [0,1,2,3,4]
     vector = []
     for i in r:
